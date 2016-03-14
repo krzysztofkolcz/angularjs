@@ -1,0 +1,38 @@
+<html ng-app="myApp">
+    <head>  
+        <title>Controller Demo</title>  
+    </head>
+     
+    <body ng-controller="AppController as ctrl">
+        <label>Name :</label><input type="text" ng-model="ctrl.name" placeholder="Enter your name"/><br/><br/>  
+        <span ng-bind="ctrl.message"></span> <span ng-bind="ctrl.name"></span><br/><br/>  
+        <button ng-click="ctrl.sayHello()"> Hello </button>
+        <button ng-click="ctrl.changeMessage()"> Change Message </button>  
+        <button ng-click="ctrl.resetMessage()"> Reset Message </button> 
+
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js">
+        </script>
+        <script>
+            angular.module('myApp', [])
+            .controller('AppController', [function() {
+                var self= this;
+                self.name = 'BLA BLA';
+                self.message = 'hello';
+                self.changeMessage = function(){
+                  self.message = 'bye';
+                }
+                self.resetMessage = function(){
+                  self.message = 'hello';
+                }
+                self.sayHello = function(){alert('say hello');}
+            }]);
+        </script>
+    </body>
+</html>
+<!-- 
+2016.03.11
+mostki k5: 5,6,6,6,5
+
+
+
+-->

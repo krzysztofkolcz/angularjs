@@ -1,0 +1,71 @@
+<html ng-app="myApp">
+  <head>  
+    <title>Service Demo</title> 
+    <style>body{font-family:"Arial";background-color:#E2E2DC}</style> 
+  </head>
+  <body ng-controller="AppController as ctrl">
+    
+    <label>Name :</label><input type="text" ng-model="ctrl.name" placeholder="Enter your name"/><br/><br/>  
+  
+    <span ng-bind="ctrl.message"></span> <br/><br/>  
+  
+    <button ng-click="ctrl.hello()"> Hello Message </button>  
+    <button ng-click="ctrl.bye()"> Bye Message </button>  
+  
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.js">
+    </script>  
+    <script>
+    function MessagingService(queueType) {
+         
+        this.getQueueType = function() {
+            return queueType;
+        };
+         
+        this.sayHello = function(name) {
+            return "Hello " + name +", Sent using "+ queueType;
+        };
+                      
+        this.sayBye = function(name) {
+            return "Bye " + name +", Sent using "+ queueType;
+        };
+       
+    } 
+     
+    angular.module('myApp',[])
+        .provider('MessagingService', function() {
+              var env='';
+              this.setEnvironment = function(environment) {
+                  env = environment;
+              };
+              // This function gets any injected dependencies, not the provider above.
+              this.$get = [function() {
+                  var queueType = '';
+                  if (env==='DEVELOPMENT') {
+                      queueType = 'activeMq';
+                  }else{
+                      queueType = 'WebSphereMq';
+                  }
+                  return new MessagingService(queueType);
+              }];
+        })
+        .config(['MessagingServiceProvider', function(MessagingServiceProvider) {
+            //Set the environment to a different value to see different behavior.
+            MessagingServiceProvider.setEnvironment('DEVELOPMENT');
+            //MessagingServiceProvider.setEnvironment('UAT');
+        }])
+        .controller('AppController', ['MessagingService', function(MessagingService) {
+             var self = this;
+             self.name='';
+             self.message='';
+             self.hello = function() {
+                  self.message = MessagingService.sayHello(self.name);
+             };
+          
+             self.bye = function(name) {
+                  self.message = MessagingService.sayBye(self.name);
+             };
+          
+        }]);  
+        </script>
+  </body>
+</html>
